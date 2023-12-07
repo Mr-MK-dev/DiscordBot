@@ -35,27 +35,29 @@ client.on('ready', () => {
 
 client.on('messageCreate', async (message) => {
     if (message.content === 'ping') {
-        message.reply('Pong!');
+        message.reply('Pong  !');
     }
 
     if (message.content.includes('https://')) {
         message.reply('The Bot Stopped temporarily, Hope you a good day');
-        // try {
-        //     const scrapper = await webScripper(message.content.toString());
+        try {
+            const scrapper = await webScripper(message.content.toString());
 
-        //     if (scrapper.length > 0) {
-        //         const data = await loadData();
-        //         console.log(`DataAvailable: `, data);
-        //         message.channel.send({
-        //             files: data,
-        //         });
-        //     }
-        //     console.log('Files sent successfully.');
-        //     // }
-        // } catch (error) {
-        //     message.reply('Error processing images.');
-        //     console.error('Error:', error);
-        // }
+            if (scrapper.length > 0) {
+                const data = await loadData();
+                if (data.length > 0) {
+                    console.log(`DataAvailable: `, data);
+                    await message.channel.send({
+                        files: data,
+                    });
+                }
+            }
+            console.log('Files sent successfully.');
+            // }
+        } catch (error) {
+            message.reply('Error processing images.');
+            console.error('Error:', error);
+        }
     }
 });
 
