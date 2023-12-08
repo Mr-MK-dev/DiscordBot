@@ -16,47 +16,23 @@ function getImages(script) {
 }
 
 async function downloadImage(images) {
-    // Download images concurrently
-    const downloadPromises = images.map(async (el) => {
-        const arr = el.split('/');
-        const res = await axios.get(el, { responseType: 'arraybuffer' });
-
-        return new Promise((resolve, reject) => {
-            fs.writeFile(
-                path.join(__dirname, 'images', arr[arr.length - 1]),
-                res.data,
-                (err) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        console.log('Image downloaded successfully!');
-                        resolve();
-                    }
-                }
-            );
-        });
+    const files = fs.readdirSync(path.join(__dirname, 'images'));
+    files.map((el) => {
+        fs.unlinkSync(path.join(__dirname, 'images', el));
     });
 
-    // Wait for all promises to resolve
-    await Promise.all(downloadPromises);
-
-    // const files = fs.readdirSync(path.join(__dirname, 'images'));
-    // files.map((el) => {
-    //     fs.unlinkSync(path.join(__dirname, 'images', el));
-    // });
-
-    // images.map(async (el, i) => {
-    //     const arr = el.split('/');
-    //     const res = await axios.get(el, { responseType: 'arraybuffer' });
-    //     fs.writeFile(
-    //         path.join(__dirname, 'images', arr[arr.length - 1]),
-    //         res.data,
-    //         (err) => {
-    //             if (err) throw err;
-    //             console.log('Image downloaded successfully!');
-    //         }
-    //     );
-    // });
+    images.map(async (el, i) => {
+        const arr = el.split('/');
+        const res = await axios.get(el, { responseType: 'arraybuffer' });
+        fs.writeFile(
+            path.join(__dirname, 'images', arr[arr.length - 1]),
+            res.data,
+            (err) => {
+                if (err) throw err;
+                console.log('Image downloaded successfully!');
+            }
+        );
+    });
 }
 
 function loadData() {

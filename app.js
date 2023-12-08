@@ -18,15 +18,18 @@ const url = 'https://www.mi.com/global/';
 async function webScripper(url) {
     try {
         const req = await axios.get(url);
-        const links = getImages(req.data);
-        downloadImage(links);
-        return links;
+        let links = getImages(req.data);
+        links = links.filter((link) => !link.includes('.svg'));
+
+        links = [...new Set(links)];
+
+        const forment = links.map((element) => `https:${element}`);
+        return forment;
     } catch (error) {
         console.error('Error:', error.message);
         return [];
     }
 }
-
 console.log('Server Started');
 
 client.on('ready', () => {
@@ -35,25 +38,28 @@ client.on('ready', () => {
 
 client.on('messageCreate', async (message) => {
     if (message.content === 'ping') {
-        message.reply('Pong  !');
+        message.reply('Pong!');
+    }
+
+    if (message.content == ('Hi' || 'Hello' || 'welcome' || 'اهلا')) {
+        message.reply(
+            'Hello 😍, Welcome to my bot scrapper,\nI hope you have a nice day,\n send the link to scraping'
+        );
     }
 
     if (message.content.includes('https://')) {
-        message.reply('The Bot Stopped temporarily, Hope you a good day');
+        message.reply('Data is on processing');
+
         try {
             const scrapper = await webScripper(message.content.toString());
 
-            if (scrapper.length > 0) {
-                const data = await loadData();
-                if (data.length > 0) {
-                    console.log(`DataAvailable: `, data);
-                    await message.channel.send({
-                        files: data,
-                    });
-                }
+            for (const imageUrl of scrapper) {
+                await message.channel.send({
+                    files: [imageUrl],
+                });
             }
-            console.log('Files sent successfully.');
-            // }
+
+            console.log('All images sent successfully.');
         } catch (error) {
             message.reply('Error processing images.');
             console.error('Error:', error);
