@@ -41,7 +41,7 @@ client.on('messageCreate', async (message) => {
         message.reply('Pong!');
     }
 
-    if (message.content == ('Hi' || 'Hello' || 'welcome' || 'اهلا')) {
+    if (message.content == 'hi') {
         message.reply(
             'Hello 😍, Welcome to my bot scrapper,\nI hope you have a nice day,\n send the link to scraping'
         );
