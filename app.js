@@ -1,9 +1,8 @@
 const axios = require('axios');
-const path = require('path');
 const fs = require('fs');
 
 const { Client, GatewayIntentBits } = require('discord.js');
-const { getImages, loadData, downloadImage } = require('./func/getImages');
+const { getImages } = require('./func/getImages');
 require('dotenv').config({});
 const client = new Client({
     intents: [
